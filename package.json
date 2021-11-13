@@ -1,0 +1,17 @@
+{
+  "name": "@wooc/mini-i18n",
+  "version": "1.0.0",
+  "description": " 小程序多语言",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "lint": "tslint -p tsconfig.json",
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "tslint": "^6.1.3",
+    "tslint-config-prettier": "^1.18.0"
+  }
+}
