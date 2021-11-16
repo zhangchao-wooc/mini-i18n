@@ -22,20 +22,19 @@ export const _listener = (i18n: any) => {
 }
 
 function _wxListener (i18n: any) {
-  ty.onAppRouteDone((res: { path: string; query: {} }) => {
-    const { path, query } = res
-    const q = Object.keys(query)
-    let p = path + (q.length ? '?' : '')
-    q.forEach((item: string, index: number) => {
-      // @ts-ignore
-      p += item + '=' + query[item] + (index === q.length - 1 ? '' : '&')
-    })
-    console.log('onAppRouteDone', p);
+  // ty.onAppRouteDone((res: { path: string; query: {} }) => {
+  //   const { path, query } = res
+  //   const q = Object.keys(query)
+  //   let p = path + (q.length ? '?' : '')
+  //   q.forEach((item: string, index: number) => {
+  //     // @ts-ignore
+  //     p += item + '=' + query[item] + (index === q.length - 1 ? '' : '&')
+  //   })
+  //   console.log('onAppRouteDone', p);
     
-    i18n.currentPath = p
-  })
+  //   i18n.currentPath = p
+  // })
   ty.onAppShow((res: any) => {
-    console.log('i18n onshow', res);
     _hint(i18n)
   })
 }

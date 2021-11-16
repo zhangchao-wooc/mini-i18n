@@ -4,6 +4,8 @@
     defualtLang?: string;
     lang?: string;
     themeColor?: string;
+    isHint?: boolean;
+    homePath: string;
   }
   
   interface LangDataType {

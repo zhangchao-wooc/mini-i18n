@@ -20,7 +20,7 @@ function _wxHint (i18n: { langTag: string; getLanguagePackList: () => any; _form
   const sysLang = getLang()
   const tag = i18n._formatLanguageTag(sysLang)
   const index = langList.findIndex((item: string)=> item === tag)
-  console.log('getLang()', sysLang, tag, i18n.lang, index);
+  // console.log('getLang()', sysLang, tag, i18n.lang, index);
   if(sysLang !== i18n.lang) {
     if(index !== -1) {
       ty.showModal({
@@ -64,7 +64,7 @@ function _alipayHint (i18n: { langTag: string; getLanguagePackList: () => any; _
   const sysLang = getLang()
   const tag = i18n._formatLanguageTag(sysLang)
   const index = langList.findIndex((item: string) => item === tag)
-  console.log('getLang()', sysLang, tag, i18n.lang, index);
+  // console.log('getLang()', sysLang, tag, i18n.lang, index);
   if(sysLang !== i18n.lang) {
     if(index !== -1) {
       ty.confirm({
