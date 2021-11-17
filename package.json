@@ -1,14 +1,28 @@
 {
   "name": "@wooc/mini-i18n",
-  "version": "1.0.0",
-  "description": " 小程序多语言",
-  "main": "index.js",
+  "version": "0.0.1",
+  "description": "小程序多语言",
+  "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
     "lint": "tslint -p tsconfig.json"
   },
-  "author": "zhangchao",
+  "author": {
+    "name": "zhangchao",
+    "email": "13170027668@163.com",
+    "url": ""
+  },
+  "repository": "github:zhangchao-wooc/mini-i18n",
+  "bugs": "https://github.com/zhangchao-wooc/mini-i18n/issues",
+  "homepage": "https://github.com/zhangchao-wooc/mini-i18n#mini-i18n",
+  "keywords": [
+    "ts",
+    "i18n",
+    "Mini Program",
+    "wx",
+    "my"
+  ],
   "license": "ISC",
   "dependencies": {
     "tslint": "^6.1.3",
