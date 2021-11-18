@@ -6,10 +6,22 @@ import { _env, ty } from './env';
 export const _reload = (i18n: any) => {
   switch(_env) {
     case 'wechat':
-      _wxReload(i18n)
+      _publicReload(i18n)
       break;
     case 'alipay':
-      _alipayReload(i18n)
+      _publicReload(i18n)
+      break;
+    case 'baidu':
+      _publicReload(i18n)
+      break;
+    case 'qq':
+      _publicReload(i18n)
+      break;
+    case 'jd':
+      _publicReload(i18n)
+      break;
+    case 'bytedance':
+      _publicReload(i18n)
       break;
     case 'browser':
       window.location.reload()
@@ -18,7 +30,7 @@ export const _reload = (i18n: any) => {
   }
 }
 
-function _wxReload (i18n: any) {
+function _publicReload (i18n: any) {
   console.log('_wxReload', i18n);
   
   ty.reLaunch({
@@ -26,8 +38,3 @@ function _wxReload (i18n: any) {
   })
 }
 
-function _alipayReload (i18n: any) {
-  ty.reLaunch({
-    url: i18n.homePath
-  })
-}

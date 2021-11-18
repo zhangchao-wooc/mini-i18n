@@ -1,5 +1,7 @@
 import { _listener, _env, getLang, region, _reload, _storage } from './until';
 import { LangDataType, ConfigType } from '@types'
+// @ts-ignore
+// const { exec } = require('child_process')
 
 // 多语言
 class I18n {
@@ -97,4 +99,5 @@ export const t = (id:string) => {
   // @ts-ignore
   return i18n.allLangData[i18n._formatLanguageTag(i18n.defualtLang)][id]
 }
+
 

@@ -61,7 +61,7 @@ export const region: RegionType = {
   'vi-vn': 'vi',
   'zh-cn': 'zh-Hans',
   'zh-hk': '',
-  'zh-tw': 'zh-tw',
+  'zh-tw': 'zh-Hant',
   'ja-ap': 'ja',
   'ja': 'ja',
   'ru': 'ru',
@@ -71,5 +71,5 @@ export const region: RegionType = {
   'en': 'en',
   // 支付宝特有标记
   'zh-hans': 'zh-Hans',
-  'zh-hant': 'zh-tw'
+  'zh-hant': 'zh-Hant'
 };

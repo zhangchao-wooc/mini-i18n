@@ -8,10 +8,22 @@ export const _listener = (i18n: any) => {
   
   switch(_env) {
     case 'wechat':
-      _wxListener(i18n)
+      _publicListener(i18n)
       break;
     case 'alipay':
-      _alipayListener(i18n)
+      _publicListener(i18n)
+      break;
+    case 'baidu':
+      _publicListener(i18n)
+      break;
+    case 'qq':
+      _publicListener(i18n)
+      break;
+    case 'jd':
+      _publicListener(i18n)
+      break;
+    case 'bytedance':
+      _publicListener(i18n)
       break;
     case 'browser':
       window.location.reload()
@@ -21,7 +33,7 @@ export const _listener = (i18n: any) => {
   }
 }
 
-function _wxListener (i18n: any) {
+function _publicListener (i18n: any) {
   // ty.onAppRouteDone((res: { path: string; query: {} }) => {
   //   const { path, query } = res
   //   const q = Object.keys(query)
@@ -35,12 +47,8 @@ function _wxListener (i18n: any) {
   //   i18n.currentPath = p
   // })
   ty.onAppShow((res: any) => {
-    _hint(i18n)
-  })
-}
-
-function _alipayListener (i18n: any) {
-  ty.onAppShow((res: any) => {
+    console.log('apponshow', res);
+    
     _hint(i18n)
   })
 }

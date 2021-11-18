@@ -4,14 +4,27 @@
 import { _env, ty } from './env'
 
 export const _storage = (handler: string, lang?: string) => {
+  
   let l = ''
   switch (_env) {
     case 'wechat':
-      l = _wxStorage(handler, lang)
+      l = _publicStorage(handler, lang)
       return l
     case 'alipay':
       l = _alipayStorage(handler, lang)
       return l
+    case 'baidu':
+      l = _publicStorage(handler, lang)
+      return l
+    case 'qq':
+      l = _publicStorage(handler, lang)
+      return l
+    case 'jd':
+      l = _publicStorage(handler, lang)
+      return l
+    case 'bytedance':
+      l = _publicStorage(handler, lang)
+      break;
     case 'browser':
       return _browserStorage(handler, lang)
     default:
@@ -19,7 +32,7 @@ export const _storage = (handler: string, lang?: string) => {
   }
 }
 
-function _wxStorage (h: string, lang?: string) {
+function _publicStorage (h: string, lang?: string) {
   if(h === 'get') {
     try {
       const res = ty.getStorageSync('tuya_locale')

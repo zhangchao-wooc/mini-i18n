@@ -1,8 +1,8 @@
 {
-  "name": "@wooc/mini-i18n",
+  "name": "@wooc/mini-i18n-dev",
   "version": "0.0.1",
   "description": "小程序多语言",
-  "main": "dist/index.js",
+  "main": "index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",

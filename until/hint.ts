@@ -3,10 +3,23 @@ import { _env, getLang, ty } from '../until';
 export const _hint = (i18n: any) => {
   switch(_env) {
     case 'wechat':
-      _wxHint(i18n)
+      _publicHint(i18n)
       break;
     case 'alipay':
       _alipayHint(i18n)
+      break;
+    case 'baidu':
+      _publicHint(i18n)
+      break;
+    case 'qq':
+      _publicHint(i18n)
+      break;
+    case 'jd':
+      _publicHint(i18n)
+      break;
+      // 字节小程序可 手动实现
+    // case 'bytedance':
+      // _bytedanceHint(i18n)
       break;
     case 'browser':
       window.location.reload()
@@ -14,13 +27,12 @@ export const _hint = (i18n: any) => {
   }
 }
 
-function _wxHint (i18n: { langTag: string; getLanguagePackList: () => any; _formatLanguageTag: (arg0: any) => any; lang: any; themeColor: any; setLocales: (arg0: any) => void; defualtLang: any; }) {
+function _publicHint (i18n: { langTag: string; getLanguagePackList: () => any; _formatLanguageTag: (arg0: any) => any; lang: any; themeColor: any; setLocales: (arg0: any) => void; defualtLang: any; }) {
   const isChinese = i18n.langTag === 'zh-Hans'
   const langList = i18n.getLanguagePackList()
   const sysLang = getLang()
   const tag = i18n._formatLanguageTag(sysLang)
   const index = langList.findIndex((item: string)=> item === tag)
-  // console.log('getLang()', sysLang, tag, i18n.lang, index);
   if(sysLang !== i18n.lang) {
     if(index !== -1) {
       ty.showModal({

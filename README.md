@@ -1,7 +1,7 @@
 # mini-i18n
 Multilingual Mini Program
 
-# 支持微信、支付宝小程序
+# 支持 [微信](https://mp.weixin.qq.com/) / [京东](https://mp.jd.com/?entrance=taro) / [百度](https://smartprogram.baidu.com/) / [支付宝](https://mini.open.alipay.com/) / [字节跳动](https://microapp.bytedance.com/) / [QQ](https://q.qq.com/) 小程序
 
 ## 一、前言
 
@@ -56,7 +56,7 @@ npm install @wooc/mini-i18n
 ```javascript
 import { i18n, t } from '@wooc/mini-i18n'
 import locales from './locales' // 语言文件
-// locales 结构如下,将语言包的key值替换为 ua.ts 中对应的value的标记。
+// locales 结构如下,将语言包的key值替换为 ua.ts 中对应的value的标记。具体内容请查看https://github.com/zhangchao-wooc/mini-i18n/blob/main/until/ua.ts
 // 与react-i18n 要求基本相同
 // {
 //	 	"zh-Hans": zh
@@ -65,8 +65,12 @@ import locales from './locales' // 语言文件
 
 // 初始化
 i18n.init({
-  locales,
-  themeColor: '#6600ff'
+  locales: object;      // 兜底语言数据必须存在
+  defualtLang?: string; // 兜底语言    默认：'en_US'
+  lang?: string;        // 当前显示语言  默认：'en_US'
+  themeColor?: string;  // 主题颜色，用于全局提示时，颜色一致  默认：'#000'
+  homePath: string;     // 语言切换后，默认跳转到的页面。
+  isHint?: boolean;     // 是否显示语言切换提示
 })
 // 在onLaunch执行之前，挂载到全局
 wx.$i18n = i18n
@@ -103,12 +107,15 @@ i18n.init({
 
 locales: { 'en': {home: '首页'}, 'zh': {home: 'Home'}}
 结构中的key值，应与 dist/until/ua.js 中对应多语言的 value 值一致
+https://github.com/zhangchao-wooc/mini-i18n/blob/main/until/ua.ts
 
 defualtLang：获取当前容器中的多语言直接传入即可，i18n中已做转换并映射到 locales 对于语言数据
 
 lang: 同上
 
-themeColor：十六进制颜色。如 isHint 为 true，提示框中的按钮颜色。默认为 '#000'
+themeColor：十六进制颜色。如 isHint 为 true，提示框中的按钮颜色。默认为 '#000' 
+// 支付宝不支持
+// 字节小程序不支持，自动跟随主题色。但字节小程序中有微信小程序的实例.所以复用微信小程序api，目前可以使用
 
 homePath：'/pages/home/index' 第一个 '/' 不可省略
 
@@ -168,3 +175,23 @@ i18n.updateLocale(locales)
 是：当前 id 是否存在 >  显示兜底语言中对应 id 的value
 
 否：显示兜底语言中对应 id 的value
+
+
+
+#### Ua参考
+
+https://github.com/zhangchao-wooc/mini-i18n/blob/main/until/ua.ts
+
+## 四、各小程序的兼容问题
+
+### 字节小程序
+
+1、不支持showModal中按钮颜色自定义，且字段key值不同
+
+2、tt.getSystemInfoSync 获取的系统信息中不含有 language 字段，tt.getUserInfo 中可以获取到，但需要授权弹框，故不使用
+
+Tip：在字节小程序中获取到微信小程序 wx 实例，所有字节小程序上均走 wx 实例上的api，且均可以成功调用，故功能上完全兼容字节小程。注意字节小程序将wx实例从中完全剥离时，该库则不支持字节小程序，请注意后续更新。
+
+#### QQ小程序
+
+1、全局也存在 wx 实例，且两个实例的变化是同步的，
