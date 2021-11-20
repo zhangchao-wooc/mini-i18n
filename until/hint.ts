@@ -1,29 +1,19 @@
+/*
+ * 字节小程序官方api不支持，但全局存在wx实例，会走wx的逻辑
+ */
 import { _env, getLang, ty } from '../until';
 
+
+
 export const _hint = (i18n: any) => {
-  switch(_env) {
-    case 'wechat':
-      _publicHint(i18n)
-      break;
-    case 'alipay':
-      _alipayHint(i18n)
-      break;
-    case 'baidu':
-      _publicHint(i18n)
-      break;
-    case 'qq':
-      _publicHint(i18n)
-      break;
-    case 'jd':
-      _publicHint(i18n)
-      break;
-      // 字节小程序可 手动实现
-    // case 'bytedance':
-      // _bytedanceHint(i18n)
-      break;
-    case 'browser':
-      window.location.reload()
-      break;
+  if ( _env === 'wechat' || _env === 'baidu' || _env === 'qq' || _env === 'jd' || _env === 'bytedance' ) {
+    _publicHint(i18n)
+  } else if (_env === 'alipay') {
+    _alipayHint(i18n)
+  } else if (_env === 'browser') {
+    window.location.reload()
+  } else {
+    console.error('不支持当前环境');
   }
 }
 

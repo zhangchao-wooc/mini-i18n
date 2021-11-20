@@ -87,6 +87,26 @@ onLaunch (options) {
 js:在具体文件js中使用wx.$t(id: string)
 ```
 
+React
+
+```js
+import { i18n, t } from '@wooc/mini-i18n-dev';
+
+wx.setNavigationBarTitle({title: t('login') })
+
+<View className={style.tip}>{t('loginHint')}</View>
+                             
+                             
+ <Button
+    className={style.apBtn}
+    style={{ backgroundColor: OEMConfig.extConfig.colorStyle.themaStyle, 		   position:'fixed',right: 0, top: '30%' }}	        
+    hoverClass={style.hoverclass}
+    onClick={() =>
+       i18n.setLocales(i18n.getLocales() === 'zh_CN' ? 'en_US' : 'zh_CN')
+    }
+ >切换语言</Button>                            
+```
+
 
 
 ## **三、API**

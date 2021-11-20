@@ -1,7 +1,5 @@
 import { _listener, _env, getLang, region, _reload, _storage } from './until';
 import { LangDataType, ConfigType } from '@types'
-// @ts-ignore
-// const { exec } = require('child_process')
 
 // 多语言
 class I18n {
@@ -46,6 +44,8 @@ class I18n {
   }
 
   getLocales () {
+    console.log(_storage('get'));
+    
     return _storage('get') || this.lang
   }
 
@@ -84,8 +84,20 @@ class I18n {
       return this.defualtLangTag
   }
 }
+// var isI18n:any;
 
-export const i18n = new I18n() 
+// function isHas () {
+//   console.log(isI18n);
+  
+//   if(!isI18n) {
+//     isI18n = new I18n()
+//     return isI18n
+//   }
+//   return isI18n
+// }
+// export const i18n = isHas()
+export const i18n = new I18n()
+
 /*
  * 1、语言文件不存在，显示兜底语言
  * 2、指定语言文件存在，当前id无对应value，显示兜底语言id对应的value

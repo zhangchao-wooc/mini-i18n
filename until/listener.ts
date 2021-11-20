@@ -5,31 +5,12 @@ import { _env, ty } from '../until';
 import { _hint } from './hint';
 
 export const _listener = (i18n: any) => {
-  
-  switch(_env) {
-    case 'wechat':
-      _publicListener(i18n)
-      break;
-    case 'alipay':
-      _publicListener(i18n)
-      break;
-    case 'baidu':
-      _publicListener(i18n)
-      break;
-    case 'qq':
-      _publicListener(i18n)
-      break;
-    case 'jd':
-      _publicListener(i18n)
-      break;
-    case 'bytedance':
-      _publicListener(i18n)
-      break;
-    case 'browser':
-      window.location.reload()
-      break;
-    default: 
-      console.error('未判断出当前环境');
+  if ( _env === 'wechat' || _env === 'baidu' || _env === 'qq' || _env === 'jd' || _env === 'bytedance' ) {
+    _publicListener(i18n)
+  } else if (_env === 'browser') {
+    // window.onload()
+  } else {
+    console.error('不支持当前环境');
   }
 }
 
@@ -47,8 +28,6 @@ function _publicListener (i18n: any) {
   //   i18n.currentPath = p
   // })
   ty.onAppShow((res: any) => {
-    console.log('apponshow', res);
-    
     _hint(i18n)
   })
 }

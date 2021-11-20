@@ -4,31 +4,17 @@
 import { _env, ty } from './env'
 
 export const _storage = (handler: string, lang?: string) => {
-  
-  let l = ''
-  switch (_env) {
-    case 'wechat':
-      l = _publicStorage(handler, lang)
-      return l
-    case 'alipay':
-      l = _alipayStorage(handler, lang)
-      return l
-    case 'baidu':
-      l = _publicStorage(handler, lang)
-      return l
-    case 'qq':
-      l = _publicStorage(handler, lang)
-      return l
-    case 'jd':
-      l = _publicStorage(handler, lang)
-      return l
-    case 'bytedance':
-      l = _publicStorage(handler, lang)
-      break;
-    case 'browser':
-      return _browserStorage(handler, lang)
-    default:
-      throw `${_storage}: Does not support the current environment`
+  if ( _env === 'wechat' || _env === 'baidu' || _env === 'qq' || _env === 'jd' || _env === 'bytedance' ) {
+
+    return _publicStorage(handler, lang)
+  } else if (_env === 'alipay') {
+
+    return _alipayStorage(handler, lang)
+  } else if (_env === 'browser') {
+
+    return _browserStorage(handler, lang)
+  } else {
+    console.error('不支持当前环境');
   }
 }
 

@@ -37,6 +37,8 @@
     return 'jd'
   } else if (typeof window !== 'undefined') {
     return 'browser'
+  } else {
+    console.error('不支持当前环境');
   }
 }
 
