@@ -17,7 +17,11 @@ export const _hint = (i18n: any) => {
   }
 }
 
-function _publicHint (i18n: { langTag: string; getLanguagePackList: () => any; _formatLanguageTag: (arg0: any) => any; lang: any; themeColor: any; setLocales: (arg0: any) => void; defualtLang: any; }) {
+function _publicHint (
+  i18n: { langTag: string; getLanguagePackList: () => any;
+   _formatLanguageTag: (arg0: any) => any; lang: any; themeColor: any; 
+   setLocales: (arg0: any) => void; defualtLang: any; 
+  }) {
   const isChinese = i18n.langTag === 'zh-Hans'
   const langList = i18n.getLanguagePackList()
   const sysLang = getLang()
@@ -60,7 +64,11 @@ function _publicHint (i18n: { langTag: string; getLanguagePackList: () => any; _
   }
 }
 
-function _alipayHint (i18n: { langTag: string; getLanguagePackList: () => any; _formatLanguageTag: (arg0: any) => any; lang: any; setLocales: (arg0: any) => void; defualtLang: any; }) {
+function _alipayHint (
+  i18n: { langTag: string; getLanguagePackList: () => any;
+     _formatLanguageTag: (arg0: any) => any; lang: any; 
+     setLocales: (arg0: any) => void; defualtLang: any; 
+  }) {
   const isChinese = i18n.langTag === 'zh-Hans'
   const langList = i18n.getLanguagePackList()
   const sysLang = getLang()

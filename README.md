@@ -11,9 +11,13 @@ Multilingual Mini Program
 
 当然也可以将该库结合三方框架的特性使用，如在 Vue 的插件中使用，将语言切换做为数据响应的出发条件使用。
 
+
+
 #### 优点
 
 1、不依赖任何框架、通用性较好。接入的成本低，页面改动较少
+
+
 
 #### 带来的问题
 
@@ -21,17 +25,23 @@ Multilingual Mini Program
 
 2、整个页面重新加载，频繁切换时，页面消耗较大。体验一般。如极少存在小程序中语言切换，影响较小
 
+
+
 **小程序特性**
 
 1、**tabbar（自定义除外）、**NavigationBarTitle 的设置需要通过 Api 单独设置，即使采用跟随框架的方式更新多语言，也需要额外提供函数，触发已加载页面的 **tabbar、**NavigationBarTitle 的设置函数，方可更新。
 
 2、语言切换后，需要刷新所有接口，让后端感知，并返回相应多语言的数据或错误提示。
 
+
+
 **微信**
 
 非自定义，无法使用多语言。
 
 自定义：可使用i18n。
+
+
 
 **支付宝**
 
@@ -43,6 +53,8 @@ Multilingual Mini Program
 
 ## 二、使用
 
+
+
 ### 安装
 
 ```javascript
@@ -51,48 +63,69 @@ npm install @wooc/mini-i18n
 
 
 
-### 引入
+### 创建 locales.js 语言文件
 
-```javascript
-import { i18n, t } from '@wooc/mini-i18n'
-import locales from './locales' // 语言文件
+```js
+// index.ts
 // locales 结构如下,将语言包的key值替换为 ua.ts 中对应的value的标记。具体内容请查看https://github.com/zhangchao-wooc/mini-i18n/blob/main/until/ua.ts
 // 与react-i18n 要求基本相同
 // {
 //	 	"zh-Hans": zh
 // 		"en": "en"
 //  }
+import zh from './zh';
+import en from './en';
+
+export default {
+  'zh-Hans': zh,
+  en
+}
+```
+
+
+
+#### app.ts / app.tsx
+
+```javascript
+import { i18n, t } from '@wooc/mini-i18n'
+import locales from './locales' // 语言文件
 
 // 初始化
-i18n.init({
-  locales: object;      // 兜底语言数据必须存在
-  defualtLang?: string; // 兜底语言    默认：'en_US'
-  lang?: string;        // 当前显示语言  默认：'en_US'
-  themeColor?: string;  // 主题颜色，用于全局提示时，颜色一致  默认：'#000'
-  homePath: string;     // 语言切换后，默认跳转到的页面。
-  isHint?: boolean;     // 是否显示语言切换提示
-})
-// 在onLaunch执行之前，挂载到全局
-wx.$i18n = i18n
-wx.$t = t
+// i18n.init({
+//   locales: object;        // 兜底语言数据必须存在
+//   defualtLang?: string;   // 兜底语言    默认：'en_US'
+//   lang?: string;          // 当前显示语言  默认：'en_US'
+//   themeColor?: string;    // 主题颜色，用于全局提示时，颜色一致  默认：'#000'
+//   homePath: string;       // 语言切换后，默认跳转到的页面。
+//   isHint?: boolean;       // 是否显示语言切换提示
+//   isVerifiyApi?: boolean; // 是否校验当前环境mini- i18n Api 是否可用   默认：false
+// })
+
 
 onLaunch (options) {
-  console.log('app', wx.$i18n.getEnv());
+  i18n.init({
+    locales,
+    lang: 'zh_CN',
+    defualtLang: 'en_US'
+    isHint: true,
+    themeColor: '#ff6600',
+    homePath: '/pages/my/index'
+  })
 },
 ```
 
+
+
 ### 使用
 
-```javascript
-js:在具体文件js中使用wx.$t(id: string)
-```
-
-React
+#### React
 
 ```js
-import { i18n, t } from '@wooc/mini-i18n-dev';
+import { i18n, t } from '@wooc/mini-i18n';
 
-wx.setNavigationBarTitle({title: t('login') })
+onShow () {
+  wx.setNavigationBarTitle({title: t('login') })
+}
 
 <View className={style.tip}>{t('loginHint')}</View>
                              
@@ -109,6 +142,61 @@ wx.setNavigationBarTitle({title: t('login') })
 
 
 
+#### Vue
+
+```js
+// plugins/t.js
+export default {
+  install: (app, options) => {
+    app.mixin({ // 混入全局 methods 中, 否则在模版中无法使用。或是挂载到全局均可
+      methods: {
+        t (id: string) {
+          return options(id)
+        },
+      }
+    })
+  }
+}
+
+// app.ts
+import i18 from './plugins/t'
+
+const App = createApp({
+
+})
+
+App.use(i18, t)
+
+// 使用
+import {i18n, t } from '@wooc/mini-i18n'
+
+// 全局混入 methods 或 在 methods 中创建一个 t 函数，方可在模版引擎中使用
+<view class="commodity-info_name">{{t(item.name)}}</view>
+
+// setup创建时，组件实例并未创建，无法使用 methods 中的 t 函数，通过import引用方式，在 setup 中使用
+setup(){
+    const state = reactive({
+      msg: t('home'),
+      menuItems: [
+        {
+          name: t('chinese'),
+          value: 'zh_CN'
+        },
+        {
+          name: t('english'),
+          value: 'en_US'
+        },
+      ],
+    })
+    onMounted(() => {
+      Taro.setNavigationBarTitle({title: t('home')})
+    })
+    return {onMounted, ...toRefs(state)}
+  })
+```
+
+
+
 ## **三、API**
 
 
@@ -117,12 +205,13 @@ wx.setNavigationBarTitle({title: t('login') })
 
 ```javascript
 i18n.init({
-  locales: object;      // 兜底语言数据必须存在
-  defualtLang?: string; // 兜底语言    默认：'en_US'
-  lang?: string;        // 当前显示语言  默认：'en_US'
-  themeColor?: string;  // 主题颜色，用于全局提示时，颜色一致  默认：'#000'
-  homePath: string;     // 语言切换后，默认跳转到的页面。
-  isHint?: boolean;     // 是否显示语言切换提示
+  locales: object;        // 兜底语言数据必须存在
+  defualtLang?: string;   // 兜底语言    默认：'en_US'
+  lang?: string;          // 当前显示语言  默认：'en_US'
+  themeColor?: string;    // 主题颜色，用于全局提示时，颜色一致  默认：'#000'
+  homePath: string;       // 语言切换后，默认跳转到的页面。
+  isHint?: boolean;       // 是否显示语言切换提示
+  isVerifiyApi?: boolean; // 是否校验当前环境mini- i18n Api 是否可用   默认：false
 })
 
 locales: { 'en': {home: '首页'}, 'zh': {home: 'Home'}}
@@ -140,9 +229,20 @@ themeColor：十六进制颜色。如 isHint 为 true，提示框中的按钮颜
 homePath：'/pages/home/index' 第一个 '/' 不可省略
 
 isHint：是否弹出提示框，判断系统语言是否与当前小程序语言一致，如不一致弹出提示框是否切换？如下图
+
+isVerifiyApi： 
+/*
+ * 校验当前环境中api是否可用。
+ * 工具中使用的 Api 在各容器中的版本建议不同，某些版本下不可使用
+ * 由于 canIUse 在不同环境下表现不稳定，所以暴露是否开启配置项
+ * 建议将开发工具、基础库升级到主流配置。同时查看小程序后台，查看当前用户使用的基础库版本，对于指定版本的用户推送
+ * 升级消息
+ */
 ```
 
+isHint: 
 
+s <img src="https://img-blog.csdnimg.cn/54bde4cab16349299fee3f3ccaeb519f.png" />
 
 ###  2、setLocales 语言切换
 
@@ -155,6 +255,7 @@ i18n.setLocales(lang: string)  如：'zh_CN'
 ###  3、getLocales 当前语言获取
 
 ```javascript
+// 语言获取顺序 params lang > localStorage > userAgent > defualt Lang
 i18n.getLocales()
 ```
 
@@ -202,6 +303,8 @@ i18n.updateLocale(locales)
 
 https://github.com/zhangchao-wooc/mini-i18n/blob/main/until/ua.ts
 
+
+
 ## 四、各小程序的兼容问题
 
 ### 字节小程序
@@ -210,8 +313,34 @@ https://github.com/zhangchao-wooc/mini-i18n/blob/main/until/ua.ts
 
 2、tt.getSystemInfoSync 获取的系统信息中不含有 language 字段，tt.getUserInfo 中可以获取到，但需要授权弹框，故不使用
 
-Tip：在字节小程序中获取到微信小程序 wx 实例，所有字节小程序上均走 wx 实例上的api，且均可以成功调用，故功能上完全兼容字节小程。注意字节小程序将wx实例从中完全剥离时，该库则不支持字节小程序，请注意后续更新。
+**Tip：**在字节小程序中获取到微信小程序 wx 实例，所有字节小程序上均走 wx 实例上的api，且均可以成功调用，故功能上完全兼容字节小程。注意字节小程序将wx实例从中完全剥离时，该库则不支持字节小程序，请注意后续更新。
+
+
 
 #### QQ小程序
 
-1、全局也存在 wx 实例，且两个实例的变化是同步的，
+1、全局也存在 wx 实例，且两个实例的变化是同步的
+
+
+
+#### 基础库版本建议
+
+**微信 wx**
+
+2.1.2 及以上
+
+**支付宝 my**
+
+ [1.4.0](https://opendocs.alipay.com/mini/framework/lib) 及以上
+
+**京东 jd**
+
+1.10.8 及以上
+
+**字节跳动 tt**
+
+**1.46.0 **及以上
+
+**百度 swan**
+
+3.140.1 及以上

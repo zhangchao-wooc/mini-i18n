@@ -4,6 +4,7 @@
     defualtLang?: string;
     lang?: string;
     themeColor?: string;
+    isVerifiyApi?: boolean;
     isHint?: boolean;
     homePath: string;
   }

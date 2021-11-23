@@ -1,4 +1,4 @@
-import { _listener, _env, getLang, region, _reload, _storage } from './until';
+import { _listener, _env, getLang, region, _reload, _storage, _canIUse } from './until';
 import { LangDataType, ConfigType } from '@types'
 
 // 多语言
@@ -10,6 +10,7 @@ class I18n {
   defualtLangTag: string;
   themeColor: string;
   homePath: string;
+  isVerifiyApi: boolean;
   isHint: boolean
   constructor () {
     this.allLangData = Object.create(null)
@@ -19,10 +20,15 @@ class I18n {
     this.defualtLangTag = 'en'
     this.themeColor = '#000'
     this.homePath = '' // 切换语言、跳转页面。建议为首页
+    this.isVerifiyApi = false // 是否开启 校验当前环境mini- i18n Api 是否可用 
     this.isHint = false
   }
 
   init (config: ConfigType) {
+    console.log('mini-i18n init...');
+    this.isVerifiyApi = config.isVerifiyApi || this.isVerifiyApi 
+    this.isVerifiyApi && _canIUse()
+
     this.themeColor = config.themeColor || this.themeColor 
     this.allLangData = config.locales ||  Object.create(null)
 
@@ -44,8 +50,6 @@ class I18n {
   }
 
   getLocales () {
-    console.log(_storage('get'));
-    
     return _storage('get') || this.lang
   }
 
@@ -76,26 +80,15 @@ class I18n {
   // 小程序语言标记：zh_CN  浏览器语言标记：zh-CN 不一致。统一转化为zh-cn 小写 + '-', return region中对应的语言标记
   // 当前传入语言没有对应的tag时，返回兜底语言tag
   _formatLanguageTag (s: string) {
-      const lang = s.includes('_') ? s.replace('_', '-').toLowerCase() : s.toLowerCase()
+    const lang = s.includes('_') ? s.replace('_', '-').toLowerCase() : s.toLowerCase()
       
-      if (region[lang]) {
-        return region[lang]
-      }
-      return this.defualtLangTag
+    if (region[lang]) {
+      return region[lang]
+    }
+    return this.defualtLangTag
   }
 }
-// var isI18n:any;
 
-// function isHas () {
-//   console.log(isI18n);
-  
-//   if(!isI18n) {
-//     isI18n = new I18n()
-//     return isI18n
-//   }
-//   return isI18n
-// }
-// export const i18n = isHas()
 export const i18n = new I18n()
 
 /*
@@ -111,5 +104,6 @@ export const t = (id:string) => {
   // @ts-ignore
   return i18n.allLangData[i18n._formatLanguageTag(i18n.defualtLang)][id]
 }
+
 
 
