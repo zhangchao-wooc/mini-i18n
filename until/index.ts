@@ -5,6 +5,7 @@ import { _storage } from './storage'
 import { getLang } from './getLang'
 import { _listener } from './listener'
 import { _hint } from './hint'
+import { _canIUse } from './canIUse'
 
 export {
   _env,
@@ -14,5 +15,6 @@ export {
   getLang,
   _listener,
   _hint,
-  ty
+  ty,
+  _canIUse
 }
