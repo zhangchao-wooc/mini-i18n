@@ -74,6 +74,7 @@ npm install @wooc/mini-i18n
 //	  "zh-Hans": zh
 // 		"en": "en"
 //  }
+// 语言文件为对象嵌套格式
 import zh from './zh';
 import en from './en';
 
@@ -294,9 +295,11 @@ i18n.updateLocale(locales)
 
 #### 当前语言包是否存在
 
-是：当前 id 是否存在 >  显示兜底语言中对应 id 的value
+是：当前 id 是否存在，不存在则显示获取语言的 key
 
-否：显示兜底语言中对应 id 的value
+否：显示兜底语言中对应 id 的value, 不存在则显示获取语言的 key
+
+控制台报错提示
 
 
 

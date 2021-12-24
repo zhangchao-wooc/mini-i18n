@@ -45,7 +45,7 @@ class I18n {
     this.homePath = config.homePath || this.homePath
     // @ts-ignore
     if(!config.locales[this._formatLanguageTag(this.defualtLang)]) {
-      throw `The default language pack ‘${this.defualtLang}’ does not exist, please check the local language pack`
+      throw `默认语言 ‘${this.defualtLang}’ 的文件不存在, 请检查多语言文件配置是否正确`
     }
   }
 
@@ -93,16 +93,25 @@ export const i18n = new I18n()
 
 /*
  * 1、语言文件不存在，显示兜底语言
- * 2、指定语言文件存在，当前id无对应value，显示兜底语言id对应的value
+ * 2、指定语言文件存在，当前id无对应value，显示 key
+ * 3、都不存在返回 ‘’
  */
 export const t = (id:string) => {
-  // @ts-ignore
-  if(i18n.allLangData[i18n.langTag]) {
-  // @ts-ignore
-    return i18n.allLangData[i18n.langTag][id] || i18n.allLangData[i18n._formatLanguageTag(i18n.defualtLang)][id]
+  const locales = i18n.allLangData[i18n.langTag]
+  const defualtLocales = i18n.allLangData[i18n.defualtLangTag]
+  const arr = id.split('.')
+  
+  if(Object.prototype.toString.call(locales) === '[object Object]' && Object.keys(locales).length !== 0) {
+    return eval('locales.' + id) || arr[arr.length - 1] || ''
   }
-  // @ts-ignore
-  return i18n.allLangData[i18n._formatLanguageTag(i18n.defualtLang)][id]
+
+  // 当前语言包不存在，显示兜底语言包
+  if(Object.prototype.toString.call(defualtLocales) === '[object Object]' && Object.keys(locales).length !== 0) {
+    return eval('defualtLocales.' + id) || arr[arr.length - 1] || ''
+  }
+
+  console.warn(`mini-i18n: 语言包 ${i18n.lang} 内容为空，请检查接口或本地文件内容`)
+  return arr[arr.length - 1]
 }
 
 
