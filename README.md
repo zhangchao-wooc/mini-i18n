@@ -19,7 +19,7 @@ Multilingual Mini Program
 
 
 
-#### 带来的问题
+##### 带来的问题
 
 1、切换语言时，会清空当前所有的路由记录，如在当前页面刷新，无法返回上一页。解决方式：传入path：每次切换语言都跳转到指定路径，如主页。
 
@@ -27,7 +27,7 @@ Multilingual Mini Program
 
 
 
-**小程序特性**
+#### **小程序特性**
 
 1、**tabbar（自定义除外）、**NavigationBarTitle 的设置需要通过 Api 单独设置，即使采用跟随框架的方式更新多语言，也需要额外提供函数，触发已加载页面的 **tabbar、**NavigationBarTitle 的设置函数，方可更新。
 
@@ -35,7 +35,7 @@ Multilingual Mini Program
 
 
 
-**微信**
+##### **微信**
 
 非自定义，无法使用多语言。
 
@@ -43,7 +43,7 @@ Multilingual Mini Program
 
 
 
-**支付宝**
+##### **支付宝**
 
 非自定义：官方支持四种语言设置：中文、英文、zh-HK、zh-TW。
 
@@ -67,12 +67,14 @@ npm install @wooc/mini-i18n
 
 ```js
 // index.ts
-// locales 结构如下,将语言包的key值替换为 ua.ts 中对应的value的标记。具体内容请查看https://github.com/zhangchao-wooc/mini-i18n/blob/main/until/ua.ts
+// locales 结构如下,将语言包的key值替换为 ua.ts 中对应的value的标记。具体内容请查看
+// https://github.com/zhangchao-wooc/mini-i18n/blob/main/until/ua.ts
 // 与react-i18n 要求基本相同
 // {
-//	 	"zh-Hans": zh
+//	  "zh-Hans": zh
 // 		"en": "en"
 //  }
+// 语言文件为对象嵌套格式
 import zh from './zh';
 import en from './en';
 
@@ -242,7 +244,7 @@ isVerifiyApi：
 
 isHint: 
 
-s <img src="https://img-blog.csdnimg.cn/54bde4cab16349299fee3f3ccaeb519f.png" />
+ <img src="https://img-blog.csdnimg.cn/54bde4cab16349299fee3f3ccaeb519f.png" />
 
 ###  2、setLocales 语言切换
 
@@ -293,9 +295,11 @@ i18n.updateLocale(locales)
 
 #### 当前语言包是否存在
 
-是：当前 id 是否存在 >  显示兜底语言中对应 id 的value
+是：当前 id 是否存在，不存在则显示获取语言的 key
 
-否：显示兜底语言中对应 id 的value
+否：显示兜底语言中对应 id 的value, 不存在则显示获取语言的 key
+
+控制台报错提示
 
 
 
@@ -339,7 +343,7 @@ https://github.com/zhangchao-wooc/mini-i18n/blob/main/until/ua.ts
 
 **字节跳动 tt**
 
-**1.46.0 **及以上
+1.46.0 及以上
 
 **百度 swan**
 
