@@ -21,7 +21,7 @@ export const _storage = (handler: string, lang?: string) => {
 function _publicStorage (h: string, lang?: string) {
   if(h === 'get') {
     try {
-      const res = ty.getStorageSync('tuya_locale')
+      const res = ty.getStorageSync('ty_locale')
       if (res) {
         return res
       }
@@ -30,7 +30,7 @@ function _publicStorage (h: string, lang?: string) {
     }
   } else if(h === 'set') {
     ty.setStorage({
-      key: 'tuya_locale',
+      key: 'ty_locale',
       data: lang
     })
   } else {
@@ -41,7 +41,7 @@ function _publicStorage (h: string, lang?: string) {
 function _alipayStorage (h: string, lang?: string) {
   if(h === 'get') {
     try {
-      const res = ty.getStorageSync({ key: 'tuya_locale' })
+      const res = ty.getStorageSync({ key: 'ty_locale' })
       if (!res.error) {
         return res.data
       }
@@ -50,7 +50,7 @@ function _alipayStorage (h: string, lang?: string) {
     }
   } else if(h === 'set') {
     ty.setStorage({
-      key: 'tuya_locale',
+      key: 'ty_locale',
       data: lang
     })
   } else {
@@ -60,9 +60,9 @@ function _alipayStorage (h: string, lang?: string) {
 
 function _browserStorage (h: string, lang?: string) {
   if(h === 'get') {
-    return localStorage.getItem('tuya_locale')
+    return localStorage.getItem('ty_locale')
   } else if(h === 'set') {
-    localStorage.setItem('tuya_locale', lang || '')
+    localStorage.setItem('ty_locale', lang || '')
   }
 }
 

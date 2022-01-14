@@ -23,19 +23,99 @@ Multilingual Mini Program
 
 1、切换语言时，会清空当前所有的路由记录，如在当前页面刷新，无法返回上一页。解决方式：传入path：每次切换语言都跳转到指定路径，如主页。
 
-2、整个页面重新加载，频繁切换时，页面消耗较大。体验一般。如极少存在小程序中语言切换，影响较小
+2、整个页面重新加载，频繁切换时，页面消耗较大。体验一般。如较少存在小程序中语言切换，影响较小
 
 
 
-#### **小程序特性**
+#### 小程序特性
 
-1、**tabbar（自定义除外）、**NavigationBarTitle 的设置需要通过 Api 单独设置，即使采用跟随框架的方式更新多语言，也需要额外提供函数，触发已加载页面的 **tabbar、**NavigationBarTitle 的设置函数，方可更新。
+#### 标题
 
-2、语言切换后，需要刷新所有接口，让后端感知，并返回相应多语言的数据或错误提示。
+**Tabbar（自定义除外）、**NavigationBarTitle 的设置需要通过 Api 单独设置，即使采用跟随框架的方式更新多语言，也需要额外提供函数，触发已加载页面的 **Tabbar、**NavigationBarTitle 的设置函数，方可更新。
+
+﻿
+
+#### 接口
+
+语言切换后，需要刷新所有接口并附带当前语言标记，让后端感知，并返回相应多语言的数据或错误提示。
+
+#### 跳转至小程序
+1、公众号跳转至小程序页面（或小程序中的插件页面）
+
+2、小程序跳转至小程序
+
+3、H5 跳转至小程序
+
+4、微信链接跳转至小程序
+
+```javascript
+// 上述的跳转方式都可以通过一下 API 中拿到当前打开页面的信息来源
+onAppShow：referrerInfo（来源信息）
+getLaunchOptionsSync：referrerInfo（来源信息）scene（场景值）
+```
+
+当前为外部跳转页面时，请勿在设置语言、增量更新中传参 isReload 为 true。会造成处触发后跳转到指定页面，而非外部指定跳转的页面。
+
+#### 插件
+
+本地缓存、运行时缓存和宿主小程序共享内存但各自环境独立，并且没有全局的 生命周期，可以看做小程序中的一个组件。所以实现时主要需要考虑插件中的
+
+﻿
+
+1、多语言工具不重复初始化
+
+可以通过 **i18n.getLanguagePackList**（当前所有语言的集合）字段，判断长度是否大于0
+
+﻿
+
+2、宿主语言的语言环境参数传递
+
+● 本地缓存：环境相互隔离。    此路不通
+
+● 路径传参：可以实现。          plugin://hello-plugin/demo?lang=en_US
+
+● 插件主文件：可以实现。       需要在跳转插件之前调用主文件中方法如下代码所示
+
+```js
+// 插件主文件 index.js----------------------------------------
+import { i18n } from '@wooc/mini-i18n'
+import locales from '../../locales/index' // 引入脚本自动执行初始化操作
+
+module.exports = {
+  init(lang) {
+  	i18n.setLocales(lang || 'zh_CN) // 默认语言
+  }
+}
+
+// 宿主环境使用-------------------------------------------------
+const plugin = requirePlugin('hello-plugin')
+Page({
+  data: {},
+  onLoad() {
+    plugin.init('zh_CN') // 当前语言环境标记，可通过小程序 Api 获取
+  },
+})
+```
+
+﻿
+
+3、页面渲染的更新
+
+在初始化、更改语言后的页面已经渲染。
+
+通过 **this.setData({title1: t('home.device_list.room_manage')})** 实现页面的及时渲染
+
+﻿
+
+4、多语言接口动态更新语言
+
+接口返回，通过 **i18n.updateLocale(obj)** 更新，等待下一次新进入的插件页面，即可更新。
 
 
 
-##### **微信**
+### 各小程序特性
+
+#### 微信
 
 非自定义，无法使用多语言。
 
@@ -43,7 +123,7 @@ Multilingual Mini Program
 
 
 
-##### **支付宝**
+#### 支付宝
 
 非自定义：官方支持四种语言设置：中文、英文、zh-HK、zh-TW。
 
@@ -98,7 +178,6 @@ import locales from './locales' // 语言文件
 //   defualtLang?: string;   // 兜底语言    默认：'en_US'
 //   lang?: string;          // 当前显示语言  默认：'en_US'
 //   themeColor?: string;    // 主题颜色，用于全局提示时，颜色一致  默认：'#000'
-//   homePath: string;       // 语言切换后，默认跳转到的页面。
 //   isHint?: boolean;       // 是否显示语言切换提示
 //   isVerifiyApi?: boolean; // 是否校验当前环境mini- i18n Api 是否可用   默认：false
 // })
@@ -111,7 +190,6 @@ onLaunch (options) {
     defualtLang: 'en_US'
     isHint: true,
     themeColor: '#ff6600',
-    homePath: '/pages/my/index'
   })
 },
 ```
@@ -138,6 +216,28 @@ t('home.list.go_to', '涂鸦智能', '%')
 第二个参数为动态参数
 第三个参数为占位符，默认为'%', 也可自定义。为了满足不同语言翻译时顺序不一致时词条的位置动态拼接
 替换词条中的'%'为动态参数。输出: 前往涂鸦智能
+```
+
+
+
+#### 小程序
+
+```js
+// JS
+import { t } from '@wooc/mini-i18n'
+
+Page({
+  data: {
+    title: t('home.device_list.room_manage')
+  },
+  onLoad() {
+  },
+})
+
+// WXML
+<button id="add" bindtap="addItem">{{ title }}</button>
+
+wxs 中无法引入外部 js 使用
 ```
 
 
@@ -221,11 +321,56 @@ setup(){
 
 
 
-## **三、API**
+#### 小程序插件
+
+```js
+小程序插件中没有全局生命周期，可以看做为小程序的组件。
+// locales.js 初始化------------------------------------------
+import { i18n, t } from '@wooc/mini-i18n'
+import zh from './zh-Hans';
+import en from './en';
+
+const locales =  {
+  'zh-Hans': zh,
+  en
+}
+
+const isInit = Object.keys(i18n.allLangData)
+isInit && i18n.init({ // 防止多次 init
+  locales,
+  lang: 'zh_CN',
+  defualtLang: 'en_US',
+  isHint: false,
+})
+
+// js 使用-------------------------------------------------------
+import { i18n, t } from '@wooc/mini-i18n'
+
+Page({
+  data: {},
+  onLoad(options) {
+    const { lang } = options
+    if(lang !== i18n.getLocales()) {
+      i18n.setLocales(lang)
+    }
+    // setLocales(lang) 时页面已经渲染。使用setData 触发页面的数据更新
+    this.setData({title: t('home.device_list.room_manage')})
+  },
+})
+
+// wxml 使用-----------------------------------------------------
+<text>
+  {{title}}
+</text>
+```
 
 
 
-### **1、init** **初始化**
+## 三、API
+
+
+
+### 1、init 初始化
 
 ```javascript
 i18n.init({
@@ -233,7 +378,6 @@ i18n.init({
   defualtLang?: string;   // 兜底语言    默认：'en_US'
   lang?: string;          // 当前显示语言  默认：'en_US'
   themeColor?: string;    // 主题颜色，用于全局提示时，颜色一致  默认：'#000'
-  homePath: string;       // 语言切换后，默认跳转到的页面。
   isHint?: boolean;       // 是否显示语言切换提示
   isVerifiyApi?: boolean; // 是否校验当前环境mini- i18n Api 是否可用   默认：false
 })
@@ -250,13 +394,12 @@ themeColor：十六进制颜色。如 isHint 为 true，提示框中的按钮颜
 // 支付宝不支持
 // 字节小程序不支持，自动跟随主题色。但字节小程序中有微信小程序的实例.所以复用微信小程序api，目前可以使用
 
-homePath：'/pages/home/index' 第一个 '/' 不可省略
-
 isHint：是否弹出提示框，判断系统语言是否与当前小程序语言一致，如不一致弹出提示框是否切换？如下图
+插件中不可使用：isHint，因为插件中没有 onAppShow API
 
 isVerifiyApi： 
 /*
- * 校验当前环境中api是否可用。
+ * 校验当前环境中api是否可用。插件中不可使用，因为插件中没有 canIUse 及其它众多 API
  * 工具中使用的 Api 在各容器中的版本建议不同，某些版本下不可使用
  * 由于 canIUse 在不同环境下表现不稳定，所以暴露是否开启配置项
  * 建议将开发工具、基础库升级到主流配置。同时查看小程序后台，查看当前用户使用的基础库版本，对于指定版本的用户推送
@@ -271,7 +414,9 @@ isHint:
 ###  2、setLocales 语言切换
 
 ```javascript
-i18n.setLocales(lang: string)  如：'zh_CN'
+i18n.setLocales(lang: string, isReload: boolean = false)  
+lang：'zh_CN'
+isReload: 重载到 onLaunch 时的页面路径。 完成页面更新。
 ```
 
 
@@ -285,7 +430,7 @@ i18n.getLocales()
 
 
 
-###  4、getLanguagePackList 当前支持语言列表
+###  4、getLanguagePackList 当前已有的语言列表
 
 ```javascript
 i18n.getLanguagePackList()
@@ -297,31 +442,38 @@ i18n.getLanguagePackList()
 
 ```javascript
 // 每次设置多语言时，在主文件中调用多语言接口，使用该 Api 更新多语言数据
+i18n.updateLocale({locales, isReload = false, isAnalyticalData = true, mark = '.'})  
 
-i18n.updateLocale(locales)  
+例：locales 
+	结构：{ 'en': {home: '首页'}, 'zh': {home: 'Home'}}
 
-例：locales { 'en': {home: '首页'}, 'zh': {home: 'Home'}}
+   isReload?: 
+   // 重载到 onLaunch 时的页面路径。 完成页面更新。
+
+   isAnalyticalData?: boolean, 
+   // 是否解析数据，默认为 true，如过结构为对象、json嵌套形式，可设置为 false
+
+   mark?: string,          
+   // 分割语言 code 的占位符，默认为 '.'
 ```
 
 
 
 ### 6、兜底处理
 
-
-
 #### init 校验
 
-校验当前传入语言包中，是否存在传入的兜底语言的语言包，如无，报错提示
+校验当前传入语言包中，是否存在传入的兜底语言的语言包，如无，控制台提示
 
 
 
 #### 当前语言包是否存在
 
-是：当前 id 是否存在，不存在则显示获取语言的 key
+是：当前 id 是否存在 >  显示兜底语言中对应 id 的value
 
-否：显示兜底语言中对应 id 的value, 不存在则显示获取语言的 key
+否：显示兜底语言中对应 id 的value > key。
 
-控制台报错提示
+提示：控制台提示相应语言包不存在，对应的词条不存在
 
 
 
