@@ -1,39 +1,28 @@
 # mini-i18n
 Multilingual Mini Program
 
-# 支持 [微信](https://mp.weixin.qq.com/) / [京东](https://mp.jd.com/?entrance=taro) / [百度](https://smartprogram.baidu.com/) / [支付宝](https://mini.open.alipay.com/) / [字节跳动](https://microapp.bytedance.com/) / [QQ](https://q.qq.com/) 小程序
+
 
 ## 一、前言
 
-现有三方整合框架较多，如（Taro、UniApp）且支持框架不同（例：Vue + Taro、React + Taro），每种跟随框架的多语言包都依赖于该框架的特性，无法通用但性能较好。例如：React-i18n、vue- i18n，都可以做到语言切换，页面数据响应式更新，无需重新加载，刷新整个页面消耗较大。
-
-该库适合寻求框架通用、无三方依赖、且无频繁语言切换的场景使用。切换语言时会重新加载页面，造成一定的消耗。
+现有三方整合框架较多，如（Taro、UniApp）且支持框架不同（例：Vue + Taro、React + Taro），每种跟随框架的多语言包都依赖于该框架的特性，无法通用但性能较好。该库适合寻求框架通用、无三方依赖、且无频繁语言切换的场景使用。切换语言时会重新加载页面，造成一定的消耗。
 
 当然也可以将该库结合三方框架的特性使用，如在 Vue 的插件中使用，将语言切换做为数据响应的出发条件使用。
+### 优点
 
+1、不依赖任何框架、通用性较好。接入的成本低，页面改动较少  
 
-
-#### 优点
-
-1、不依赖任何框架、通用性较好。接入的成本低，页面改动较少
-
-
+2、 支持 [微信](https://mp.weixin.qq.com/) / [京东](https://mp.jd.com/?entrance=taro) / [百度](https://smartprogram.baidu.com/) / [支付宝](https://mini.open.alipay.com/) / [字节跳动](https://microapp.bytedance.com/) / [QQ](https://q.qq.com/) 小程序
 
 ##### 带来的问题
 
 1、切换语言时，会清空当前所有的路由记录，如在当前页面刷新，无法返回上一页。解决方式：传入path：每次切换语言都跳转到指定路径，如主页。
 
 2、整个页面重新加载，频繁切换时，页面消耗较大。体验一般。如较少存在小程序中语言切换，影响较小
-
-
-
-#### 小程序特性
-
+### 小程序特性
 #### 标题
 
-**Tabbar（自定义除外）、**NavigationBarTitle 的设置需要通过 Api 单独设置，即使采用跟随框架的方式更新多语言，也需要额外提供函数，触发已加载页面的 **Tabbar、**NavigationBarTitle 的设置函数，方可更新。
-
-﻿
+Tabbar（自定义除外）、NavigationBarTitle 的设置需要通过 Api 单独设置，即使采用跟随框架的方式更新多语言，也需要额外提供函数，触发已加载页面的 Tabbar、NavigationBarTitle 的设置函数，方可更新。
 
 #### 接口
 
@@ -58,16 +47,13 @@ getLaunchOptionsSync：referrerInfo（来源信息）scene（场景值）
 
 #### 插件
 
-本地缓存、运行时缓存和宿主小程序共享内存但各自环境独立，并且没有全局的 生命周期，可以看做小程序中的一个组件。所以实现时主要需要考虑插件中的
-
-﻿
+本地缓存、运行时缓存和宿主小程序共享内存但各自环境独立，并且没有全局的 生命周期，可以看做小程序中的一个组件。所以实现时主要需要考虑插件中的:  
+  
 
 1、多语言工具不重复初始化
 
-可以通过 **i18n.getLanguagePackList**（当前所有语言的集合）字段，判断长度是否大于0
-
-﻿
-
+可以通过 **i18n.getLanguagePackList**（当前所有语言的集合）字段，判断长度是否大于0  
+  
 2、宿主语言的语言环境参数传递
 
 ● 本地缓存：环境相互隔离。    此路不通
@@ -172,17 +158,6 @@ export default {
 import { i18n, t } from '@wooc/mini-i18n'
 import locales from './locales' // 语言文件
 
-// 初始化
-// i18n.init({
-//   locales: object;        // 兜底语言数据必须存在
-//   defualtLang?: string;   // 兜底语言    默认：'en_US'
-//   lang?: string;          // 当前显示语言  默认：'en_US'
-//   themeColor?: string;    // 主题颜色，用于全局提示时，颜色一致  默认：'#000'
-//   isHint?: boolean;       // 是否显示语言切换提示
-//   isVerifiyApi?: boolean; // 是否校验当前环境mini- i18n Api 是否可用   默认：false
-// })
-
-
 onLaunch (options) {
   i18n.init({
     locales,
@@ -190,6 +165,7 @@ onLaunch (options) {
     defualtLang: 'en_US'
     isHint: true,
     themeColor: '#ff6600',
+    homePath: '/pages/my/index'
   })
 },
 ```
@@ -227,10 +203,11 @@ t('home.list.go_to', '涂鸦智能', '%')
 import { t } from '@wooc/mini-i18n'
 
 Page({
-  data: {
-    title: t('home.device_list.room_manage')
-  },
+  data: {},
   onLoad() {
+    this.setData({
+      title: t('home.device_list.room_manage')
+    })
   },
 })
 
@@ -351,7 +328,11 @@ Page({
   onLoad(options) {
     const { lang } = options
     if(lang !== i18n.getLocales()) {
-      i18n.setLocales(lang)
+      i18n.setLocales({
+        lang: 'zh_CN', 
+        isReload: true, 
+        path 'plugin://hello-plugin/hello-page?lang=zh'
+      })
     }
     // setLocales(lang) 时页面已经渲染。使用setData 触发页面的数据更新
     this.setData({title: t('home.device_list.room_manage')})
@@ -378,6 +359,7 @@ i18n.init({
   defualtLang?: string;   // 兜底语言    默认：'en_US'
   lang?: string;          // 当前显示语言  默认：'en_US'
   themeColor?: string;    // 主题颜色，用于全局提示时，颜色一致  默认：'#000'
+  homePath: string;       // reload 默认跳转到的页面, 建议为首页，不建议插件中使用。
   isHint?: boolean;       // 是否显示语言切换提示
   isVerifiyApi?: boolean; // 是否校验当前环境mini- i18n Api 是否可用   默认：false
 })
@@ -393,6 +375,12 @@ lang: 同上
 themeColor：十六进制颜色。如 isHint 为 true，提示框中的按钮颜色。默认为 '#000' 
 // 支付宝不支持
 // 字节小程序不支持，自动跟随主题色。但字节小程序中有微信小程序的实例.所以复用微信小程序api，目前可以使用
+
+homePath 
+/*
+ * '/pages/home/index' 重新加载指向的页面。插件中使用时通常带有动态参数，建议插件中使用
+ * setLocales，updateLocale 中的自定义路径，方便携带动态参数
+ */
 
 isHint：是否弹出提示框，判断系统语言是否与当前小程序语言一致，如不一致弹出提示框是否切换？如下图
 插件中不可使用：isHint，因为插件中没有 onAppShow API
@@ -414,9 +402,26 @@ isHint:
 ###  2、setLocales 语言切换
 
 ```javascript
-i18n.setLocales(lang: string, isReload: boolean = false)  
+i18n.setLocales({
+  lang: string, 
+  isReload: boolean = false,
+  path?: string,
+  query?: {
+    [propName: string]: string
+  }
+})  
+
 lang：'zh_CN'
-isReload: 重载到 onLaunch 时的页面路径。 完成页面更新。
+
+isReload?: 是否定向到指定页面，完成页面更新。默认为 false
+
+path?: string,
+自定义的跳转路径。 为空时，以 homePath（不建议于插件） 路径为准。 
+插件通常携带动态参数，建议如下方式使用
+插件使用自定义路径：'plugin://hello-plugin/hello-page?lang=zh' 模式
+
+query?: string,
+参数。也可以将参数直接拼接到 path 后，如上所示
 ```
 
 
@@ -442,19 +447,38 @@ i18n.getLanguagePackList()
 
 ```javascript
 // 每次设置多语言时，在主文件中调用多语言接口，使用该 Api 更新多语言数据
-i18n.updateLocale({locales, isReload = false, isAnalyticalData = true, mark = '.'})  
+
+i18n.updateLocale({
+  locales, 
+  isReload = false, 
+  isAnalyticalData = true, 
+  mark = '.',
+  path: string,
+  query: {
+    [propName: string]: string
+  }
+})  
 
 例：locales 
-	结构：{ 'en': {home: '首页'}, 'zh': {home: 'Home'}}
+	{ 'en': {home: '首页'}, 'zh': {home: 'Home'}}
 
    isReload?: 
-   // 重载到 onLaunch 时的页面路径。 完成页面更新。
+   是否定向到指定页面，完成页面更新。默认 false
 
    isAnalyticalData?: boolean, 
-   // 是否解析数据，默认为 true，如过结构为对象、json嵌套形式，可设置为 false
+   是否解析数据，默认为 true，如过结构为对象、json嵌套形式，可设置为 false
 
    mark?: string,          
-   // 分割语言 code 的占位符，默认为 '.'
+   分割语言 code 的占位符，默认为 '.'
+
+   path?: string,
+   自定义的跳转路径。 为空时，以 homePath（不建议于插件） 路径为准。 
+   插件通常携带动态参数，建议如下方式使用 
+   插件使用自定义路径：'plugin://hello-plugin/hello-page?lang=zh' 模式
+
+   query?: string,
+   参数。也可以将参数直接拼接到 path 后，如上所示
+
 ```
 
 

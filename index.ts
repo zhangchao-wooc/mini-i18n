@@ -1,7 +1,7 @@
 import { _listener, _env, getLang, region, _reload, _storage, _canIUse } from './until'
 import { getValue, dealData } from './until/common'
 import merge from './until/merge'
-import { LangDataType, ConfigType, UpdateLocaleType } from '@types'
+import { LangDataType, ConfigType, UpdateLocaleType, SetLocalesType } from '@types'
 
 // 多语言
 class I18n {
@@ -21,7 +21,7 @@ class I18n {
     this.langTag = 'en'
     this.defualtLangTag = 'en'
     this.themeColor = '#000'
-    this.homePath = '' // 切换语言、跳转页面。建议为首页
+    this.homePath = '' // 首页路径
     this.isVerifiyApi = false // 是否开启 校验当前环境mini- i18n Api 是否可用
     this.isHint = false
   }
@@ -63,23 +63,30 @@ class I18n {
     return Object.keys(this.allLangData)
   }
 
-  setLocales(lang: string, isReload: boolean = false): void {
+  setLocales({ lang, isReload = false, path = '', query = {} }: SetLocalesType): void {
     _storage('set', lang)
     this.lang = lang
     this.langTag = this._formatLanguageTag(lang)
     console.log('setLocales', { lang, isReload })
-    isReload && _reload(this)
+    isReload && _reload(this, { path, query })
   }
 
   /*
    * 增量更新语言包
    */
-  updateLocale({ locales, isReload = false, isAnalyticalData = true, mark = '.' }: UpdateLocaleType): void {
+  updateLocale({
+    locales,
+    isReload = false,
+    isAnalyticalData = true,
+    mark = '.',
+    path = '',
+    query = {},
+  }: UpdateLocaleType): void {
     // isAnalyticalData ? 解析 json 数据为对象嵌套 : 不解析
     const data = isAnalyticalData ? dealData.analyticalData(locales, mark) : locales
     this.allLangData = merge(this.allLangData, data)
     console.log('updateLocale', { locales, isReload, isAnalyticalData, mark }, this.allLangData)
-    isReload && _reload(this)
+    isReload && _reload(this, { path, query })
   }
 
   // 小程序语言标记：zh_CN  浏览器语言标记：zh-CN 不一致。统一转化为zh-cn 小写 + '-', return region中对应的语言标记
