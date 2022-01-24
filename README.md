@@ -14,9 +14,9 @@ Multilingual Mini Program
 
 2、 支持 [微信](https://mp.weixin.qq.com/) / [京东](https://mp.jd.com/?entrance=taro) / [百度](https://smartprogram.baidu.com/) / [支付宝](https://mini.open.alipay.com/) / [字节跳动](https://microapp.bytedance.com/) / [QQ](https://q.qq.com/) 小程序
 
-##### 带来的问题
+#### 带来的问题
 
-1、切换语言时，会清空当前所有的路由记录，如在当前页面刷新，无法返回上一页。解决方式：传入path：每次切换语言都跳转到指定路径，如主页。
+1、页面重载，重载到 tabbar 时会清空 tabbar 的页面缓存。支付宝小程序除外（支付宝使用 redirectTo）
 
 2、整个页面重新加载，频繁切换时，页面消耗较大。体验一般。如较少存在小程序中语言切换，影响较小
 ### 小程序特性
@@ -43,8 +43,6 @@ onAppShow：referrerInfo（来源信息）
 getLaunchOptionsSync：referrerInfo（来源信息）scene（场景值）
 ```
 
-当前为外部跳转页面时，请勿在设置语言、增量更新中传参 isReload 为 true。会造成处触发后跳转到指定页面，而非外部指定跳转的页面。
-
 #### 插件
 
 本地缓存、运行时缓存和宿主小程序共享内存但各自环境独立，并且没有全局的 生命周期，可以看做小程序中的一个组件。所以实现时主要需要考虑插件中的:  
@@ -53,6 +51,7 @@ getLaunchOptionsSync：referrerInfo（来源信息）scene（场景值）
 1、多语言工具不重复初始化
 
 可以通过 **i18n.getLanguagePackList**（当前所有语言的集合）字段，判断长度是否大于0  
+
   
 2、宿主语言的语言环境参数传递
 
@@ -69,7 +68,7 @@ import locales from '../../locales/index' // 引入脚本自动执行初始化�
 
 module.exports = {
   init(lang) {
-  	i18n.setLocales(lang || 'zh_CN) // 默认语言
+  	i18n.setLocales(lang || 'zh_CN') // 默认语言
   }
 }
 
@@ -95,15 +94,15 @@ Page({
 
 4、多语言接口动态更新语言
 
-接口返回，通过 **i18n.updateLocale(obj)** 更新，等待下一次新进入的插件页面，即可更新。
+接口返回，通过 **i18n.updateLocale(obj)** 更新，页面重载完成，即可更新。
 
 
 
 ### 各小程序特性
 
-#### 微信
+#### 微信及其他小程序
 
-非自定义，无法使用多语言。
+非自定义，无法使用多语言。可通过 API 设置 tabbar 多语言
 
 自定义：可使用i18n。
 
