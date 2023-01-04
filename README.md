@@ -100,6 +100,7 @@ i18n.getLanguagePackList
 ```  
 
 <br/>
+
 2. 宿主语言的语言环境参数传递
 ```sh
 - 本地缓存：环境相互隔离。       此路不通
@@ -109,7 +110,7 @@ i18n.getLanguagePackList
 - 插件主文件：可以实现。         需要在跳转插件之前调用主文件中方法如下代码所示
 ```
 
-  2.1. 插件使用示例
+<span style="padding-left: 20px;">2.1. 插件使用示例</span>
 
 ```js
 // 插件主文件 index.js
