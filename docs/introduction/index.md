@@ -22,16 +22,6 @@ keywords: [mini-i18n,i18n,miniapp,wx,my,jd,tt,swan,@wooc/mini-i18n,wooc] # 配�
 
 如 Taro、UniApp、Mpx 等， 跨端框架支持的开发框架也不同。例如 Vue + Taro、React + Taro、Vue + Uniapp。每种跟随框架的多语言包都依赖于该框架的特性，无法通用但性能较好。
 
-<!-- <br/> -->
-
-## 已有多语言
-### 微信官方多语言
-### Mpx
-
-
-
-<!-- <br/> -->
-
 ## 优点
  1. 不依赖任何框架、通用性较好。接入的成本低，页面改动较少。
  2. 支持 <a href='https://developers.weixin.qq.com/miniprogram/dev/framework' target="_blank">微信</a> / <a href='https://opendocs.alipay.com/mini/03lwrv' target="_blank">支付宝</a> / <a href='https://microapp.bytedance.com/docs/zh-CN/mini-app/develop/guide/start/introduction' target="_blank">字节跳动</a> / <a href='https://mp-docs.jd.com/doc/dev/framework/-1' target="_blank">京东</a> / <a href='https://smartprogram.baidu.com/docs/develop/tutorial/intro/' target="_blank">百度</a> / <a href='https://q.qq.com/wiki/develop/miniprogram/frame' target="_blank">QQ 小程序</a>
@@ -41,3 +31,6 @@ keywords: [mini-i18n,i18n,miniapp,wx,my,jd,tt,swan,@wooc/mini-i18n,wooc] # 配�
  1. 页面重载，重载到 ```tabbar``` 时会清空 ```tabbar``` 的页面缓存。支付宝小程序除外（支付宝使用 ```redirectTo```）。
  2. 整个页面会重新加载，频繁切换时页面消耗较大。如较少存在小程序中语言切换，影响较小。
 
+## 已有多语言方案
+- 微信官方多语言
+- Mpx
